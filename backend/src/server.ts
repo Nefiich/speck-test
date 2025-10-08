@@ -7,6 +7,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 
 import authRoutes from './routes/authRoutes';
+import calendarRoutes from './routes/calendarRoutes';
 
 const app = express();
 
@@ -45,6 +46,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // --- Routes ---
 app.use('/auth', authRoutes);
+app.use('/calendar', calendarRoutes);
 
 // --- Health Check ---
 app.get('/', (_req: Request, res: Response) => {
