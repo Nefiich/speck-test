@@ -41,6 +41,29 @@ export interface SyncResponse {
     requiresReauth?: boolean;
 }
 
+export interface CreateEventData {
+    summary: string;
+    description?: string;
+    start: {
+        dateTime?: string;
+        date?: string;
+        timeZone?: string;
+    };
+    end: {
+        dateTime?: string;
+        date?: string;
+        timeZone?: string;
+    };
+    location?: string;
+}
+
+export interface CreateEventResponse {
+    success: boolean;
+    event: CalendarEvent;
+    message: string;
+    requiresReauth?: boolean;
+}
+
 export async function getCalendarEvents(days: number = 30): Promise<CalendarEvent[]> {
     try {
         const response = await ApiClient.get<CalendarEventsResponse>(`/calendar/events?days=${days}`);
@@ -90,6 +113,29 @@ export async function syncCalendarEvents(): Promise<SyncResponse> {
         return response.data || { success: false, synced: 0, message: 'Unknown error' };
     } catch (error) {
         console.error('Error syncing calendar events:', error);
+        throw error;
+    }
+}
+
+export async function createEvent(eventData: CreateEventData): Promise<CalendarEvent> {
+    try {
+        const response = await ApiClient.post<CreateEventResponse>('/calendar/events', eventData);
+
+        if (response.error) {
+            throw new Error(response.error);
+        }
+
+        if (response.data?.requiresReauth) {
+            throw new Error(response.data.message || 'Please re-authenticate with Google');
+        }
+
+        if (!response.data?.success) {
+            throw new Error(response.data?.message || 'Failed to create event');
+        }
+
+        return response.data.event;
+    } catch (error) {
+        console.error('Error creating calendar event:', error);
         throw error;
     }
 }

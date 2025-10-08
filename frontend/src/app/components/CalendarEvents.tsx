@@ -6,6 +6,7 @@ import {
   syncCalendarEvents,
   CalendarEvent,
 } from "../utils/calendarApi";
+import AddEventModal from "./AddEventModal";
 
 type TimeRange = "1" | "7" | "30";
 
@@ -17,6 +18,7 @@ export default function CalendarEvents() {
   const [requiresReauth, setRequiresReauth] = useState(false);
   const [selectedRange, setSelectedRange] = useState<TimeRange>("7");
   const [syncMessage, setSyncMessage] = useState<string | null>(null);
+  const [isAddEventModalOpen, setIsAddEventModalOpen] = useState(false);
 
   const timeRangeOptions = [
     { value: "1" as TimeRange, label: "Today", description: "Next 24 hours" },
@@ -84,6 +86,11 @@ export default function CalendarEvents() {
 
   const handleRangeChange = (range: TimeRange) => {
     setSelectedRange(range);
+  };
+
+  const handleEventCreated = async () => {
+    await fetchEvents();
+    setSyncMessage("Event created successfully!");
   };
 
   const handleReauth = () => {
@@ -337,6 +344,26 @@ export default function CalendarEvents() {
         </h3>
 
         <div className="flex flex-col sm:flex-row gap-3">
+          <button
+            onClick={() => setIsAddEventModalOpen(true)}
+            className="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors"
+          >
+            <svg
+              className="h-4 w-4 mr-2"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 4v16m8-8H4"
+              />
+            </svg>
+            Add Event
+          </button>
+
           <button
             onClick={handleSync}
             disabled={syncing}
@@ -678,6 +705,12 @@ export default function CalendarEvents() {
           })}
         </div>
       )}
+
+      <AddEventModal
+        isOpen={isAddEventModalOpen}
+        onClose={() => setIsAddEventModalOpen(false)}
+        onEventCreated={handleEventCreated}
+      />
     </div>
   );
 }

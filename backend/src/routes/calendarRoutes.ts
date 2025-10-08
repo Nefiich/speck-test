@@ -8,6 +8,9 @@ const router = Router();
 // authentication
 router.use(authenticateToken);
 
+// Create a new calendar event
+router.post('/events', CalendarController.createEvent);
+
 // Sync events from Google Calendar to database
 router.post('/sync', EventSyncController.syncEvents);
 
