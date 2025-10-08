@@ -7,7 +7,7 @@ interface ApiResponse<T = unknown> {
 }
 
 class ApiClient {
-    private static readonly BASE_URL = 'http://127.0.0.1:3001';
+    private static readonly BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
     private static async makeRequest<T>(
         endpoint: string,

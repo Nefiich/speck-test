@@ -30,6 +30,10 @@ Create a `.env` file in the `backend/` directory with the variables from the ema
 
    The backend will run on `http://localhost:3001`
 
+### Backend Environment Variables
+
+Create a `.env` file in the `frontend/` directory with the variables from the email.
+
 ### Frontend (Next.js App)
 
 1. Navigate to the frontend directory:

@@ -11,7 +11,7 @@ export default function Home() {
     const checkAuth = async () => {
       try {
         // Check if user is authenticated by calling backend
-        const response = await fetch("http://localhost:3001/auth/verify", {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/verify`, {
           method: "GET",
           credentials: "include", // Include cookies
         });
